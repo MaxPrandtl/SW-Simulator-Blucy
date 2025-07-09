@@ -1,0 +1,38 @@
+{
+    "id": "blucy-test",
+    "host": "127.0.0.1",
+    "connections": [{
+	"name": "DVL",
+        "incoming": [{
+            "name": "DVL input",
+            "mode": "serial", 
+            "protocol": "serial",
+            "port": "/dev/ttyS5",
+            "rate": 115200
+        }],
+        "direct":{
+            "protocol": "udp",
+            "host": "255.255.255.255",
+            "port": "50005"
+        },
+        "transformations": {
+            "baseTopic": "telemetry/DVL",
+            "external": "df21.json"
+        }
+    }, {
+        "enabled": false,
+	"name": "FOG",
+	"incoming": [{
+	    "name": "FOG input",
+	    "mode": "socket",
+	    "protocol": "udp",
+	    "port":8111,
+	    "ip": "192.168."
+	}],
+	"output": ["telemetry/FOG/raw"],
+	"transformations":{
+	    "baseTopic": "telemetry/FOG",
+            "external": ""
+	}
+    }]
+}

@@ -1,0 +1,20 @@
+#! /bin/bash
+
+./mqtt_clock mqtt_clock.par &
+
+./mqtt_ana_dig_io mqtt_ana_dig_io.par &
+
+export LD_LIBRARY_PATH=/usr/share/; ./mqtt_us_imu mqtt_us_imu.par &
+
+./mqtt_thrusters mqtt_thrusters.par &
+
+./mqtt_pa500 mqtt_pa500.par &
+
+./mqtt_mini_ct mqtt_mini_ct.par &
+
+./mqtt_mini_svs mqtt_mini_svs.par &
+
+./mqtt_ib_ins mqtt_ib_ins.par &
+
+
+

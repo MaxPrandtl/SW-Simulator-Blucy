@@ -1,0 +1,91 @@
+import asyncio
+import os
+import signal
+import time
+
+import json
+import socket
+from gmqtt import Client as MQTTClient
+
+config = json.load(open('config.json'))
+
+inc = {}
+out = {}
+trans = {}
+for conn in config.get('connections', []):
+    for incoming in conn.get('incoming'):
+        inc[incoming] = {
+            "trans": conn.get('transformations', {}).get(incoming),
+            "out": conn.get('outgoing')
+        }
+
+
+#import uvloop
+#asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
+
+
+STOP = asyncio.Event()
+
+
+def on_connect(client, flags, rc, properties):
+    print('Connected')
+    for conn in config.get('connections', []):
+        for incoming in conn.get('incoming'):
+            outs = []
+            for out in conn.get('outgoing', []):
+                if out.get('protocol') == "tcp":
+                    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                    s.connect((out.get('ip'), int(out.get('port'))))
+                    outs.append(s)
+            inc[incoming]['outs'] = outs
+            client.subscribe(incoming)
+
+def on_message(client, topic, payload, qos, properties):
+    topic_meta = inc.get(topic)
+    if topic_meta.get('trans'):
+        print(topic_meta.get('trans'))
+    for cout in topic_meta.get('outs'): ##tcp
+        cout.send(payload)
+    for cout in topic_meta.get('out'): #others
+        mode = cout.get('protocol','tcp')
+        if mode == "tcp": 
+            print('done')
+        elif mode == "udp": 
+            s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+            if cout.get('ip') == "255.255.255.255":
+                s.setsockopt(socket.SOL_SOCKET, socket.SO_BORADCAST)
+            s.sendto(payload, (cout.get('ip'), int(cout.get('port'))))
+        elif mode == "socket":
+            pass
+
+
+
+
+def on_disconnect(client, packet, exc=None):
+    print('Disconnected')
+
+def on_subscribe(client, mid, qos, properties):
+    print('SUBSCRIBED')
+
+def ask_exit(*args):
+    STOP.set()
+
+    
+async def main(broker_host):
+    client = MQTTClient(config.get('id'))
+
+    client.on_connect = on_connect
+    client.on_message = on_message
+    client.on_disconnect = on_disconnect
+    client.on_subscribe = on_subscribe
+    await client.connect(broker_host)
+    await STOP.wait()
+    await client.disconnect()
+
+
+if __name__ == '__main__':
+    loop = asyncio.get_event_loop()
+    host = config.get('host')
+    loop.add_signal_handler(signal.SIGINT, ask_exit)
+    loop.add_signal_handler(signal.SIGTERM, ask_exit)
+    loop.run_until_complete(main(host))

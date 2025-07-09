@@ -1,0 +1,184 @@
+{
+    "id": "Blucy",
+    "connections": [{
+        "name": "DVL_raw",
+        "enabled": false,
+        "incoming": {
+            "name": "DVL input",
+            "protocol": "serial",
+            "port": "/dev/ttyS5",
+            "rate": 115200,
+            "format": "df21"
+        }, 
+        "outgoing": [{
+            "enabled": false,
+            "name":"mqtt_out",
+            "protocol": "mqtt",
+            "host": "127.0.0.1",
+            "topics": ["telemetry/DVL/raw"]
+        }, {
+            "protocol": "udp",
+            "host": "255.255.255.255",
+            "port": "50005"
+        }],
+        "transformation": {
+            "mode": "noop", 
+            "format": "df21",
+            "target": "mqtt_out",
+            "baseTopic": "telemetry/DVL"
+        }
+    }, {
+        "name": "MINISVS_Qinsy",
+        "incoming": {
+            "protocol": "mqtt",
+            "host": "127.0.0.1",
+            "topics": ["miniSVS/pressure", "miniSVS/soundSpeed"]
+        },
+        "outgoing": [{
+            "protocol": "udp",
+            "host": "192.168.29.235",
+            "port": "5602"
+        }],
+        "transformation": {
+            "mode": "script",
+            "script": "MINISVS_ReadQinsy.gen_minisvs",
+            "params": ["miniSVS/soundSpeed"]
+        }
+    }, {
+        "name": "MINISVS",
+        "incoming": {
+            "protocol": "mqtt",
+            "host": "127.0.0.1",
+            "topics": ["miniSVS/pressure", "miniSVS/soundSpeed"]
+        },
+        "outgoing": [{
+            "protocol": "udp",
+            "host":"255.255.255.255",
+            "port": "50002"
+        }],
+        "transformation": {
+            "mode": "script",
+            "script": "MINISVS_READ.gen_minisvs",
+            "params": ["miniSVS/pressure", "miniSVS/soundSpeed"]
+        }
+    }, {
+        "name":"MINISVSSP",
+        "incoming": {
+            "protocol": "mqtt",
+            "host": "127.0.0.1",
+            "topics": ["miniSVS/soundSpeed"]
+        },
+        "outgoing": [{
+            "protocol": "udp",
+            "host": "255.255.255.255",
+            "port": "50002"
+        }, {
+	    "protocol": "udp",
+	    "host": "10.0.0.99",
+	    "port": "49155"
+	}],
+        "transformation":{
+            "mode": "script",
+            "script": "MINISVSSP_Read.gen_minisvssp",
+            "params": ["miniSVS/soundSpeed"]
+        }
+    },{
+        "name": "GPGGA",
+	    "enabled": false,
+        "incoming": {
+            "protocol": "mqtt",
+            "host": "127.0.0.1",
+            "topics": [
+                {"topic":"us_imu/utcTimestampNanoseconds", "qos": 1},
+                {"topic": "us_imu/latitude", "qos": 1},
+                {"topic":"us_imu/longitude", "qos":1},
+                "us_imu/utcTimestampFlags",
+                "us_imu/heightAboveEllipsoid",
+                "us_imu/heightAboveMSL",
+                "us_imu/horizontalAccuracy"
+            ]
+        },
+        "outgoing": [{
+            "protocol": "udp",
+            "host": "255.255.255.255",
+            "port": "50001"
+        }],
+        "transformation": {
+            "mode": "script",
+            "script": "GPGGA_Read.gen_gga",
+            "params": [
+                "us_imu/utcTimestampNanoseconds",
+                "us_imu/latitude",
+                "us_imu/longitude",
+                "us_imu/utcTimestampFlags",
+                "us_imu/heightAboveMSL",
+                "us_imu/heightAboveEllipsoid",
+                "us_imu/horizontalAccuracy"
+            ]
+        }
+    }, {
+        "name": "GPZDA",
+	"enabled": false,
+ 	"incoming": {
+            "protocol": "mqtt",
+            "host": "127.0.0.1",
+            "topics": [
+                {"topic":"us_imu/utcTimestampNanoseconds", "qos": 1},
+                {"topic": "us_imu/latitude", "qos": 1},
+                {"topic":"us_imu/longitude", "qos":1},
+                "us_imu/utcTimestampFlags",
+                "us_imu/heightAboveEllipsoid",
+                "us_imu/heightAboveMSL",
+                "us_imu/horizontalAccuracy"
+            ]
+        },
+        "outgoing": [{
+            "protocol": "udp",
+            "host": "255.255.255.255",
+            "port": "50001"
+        }],
+        "transformation": {
+            "mode": "script",
+            "script": "GPZDA_Read.gen_zda",
+            "params": ["us_imu/utcTimestampNanoseconds"]
+        }
+    }, {
+        "name": "IXPhin da FOG",
+        "incoming": {
+            "name": "FOG input",
+            "protocol": "udp",
+            "port": "49154",
+            "host": "192.168.29.111"
+        },
+        "outgoing": [{
+            "protocol":"udp",
+            "host": "10.0.0.99",
+	    "port": "49154",
+            "topics": ["telemetry/FOG/raw"]
+        }],
+        "transformation":{
+            "mode": "noop",
+            "baseTopic": "telemetry/FOG",
+            "external": ""
+        }
+    }, {
+        "name": "GPSLike da FOG",
+        "incoming": {
+            "name": "FOG input",
+            "protocol": "udp",
+            "port": "49153",
+            "host": "192.168.29.111"
+        },
+        "outgoing": [{
+            "protocol":"udp",
+            "host": "10.0.0.99",
+            "port": "49153",
+            "topics": ["telemetry/FOG/raw"]
+        }],
+        "transformation":{
+            "mode": "noop",
+            "baseTopic": "telemetry/FOG",
+            "external": ""
+        }
+    }]
+}

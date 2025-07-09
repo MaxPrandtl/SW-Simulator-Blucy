@@ -1,0 +1,41 @@
+# mqtt_pa500.par file
+
+# Important note:
+# all lines starting with \r, \n, blank, #, \t are skipped!
+
+# process priority
+80
+
+# loop period expressed in milliseconds
+100
+
+# communication time out expressed in seconds 
+5
+
+# simulation flag: actual==0 / simulated==1 
+0
+
+# debug logging flag: disabled==0 / enabled==1 
+0
+
+# MQTT broker IP address
+127.0.0.1
+
+# MQTT broket TCP port
+1883
+
+# MQTT QOS
+2
+
+# MQTT topics prefix
+pa500
+
+# MQTT timestamp topic
+clock/timestamp
+
+# serial device name
+/dev/ttyS9
+
+# serial baud rate
+9600
+

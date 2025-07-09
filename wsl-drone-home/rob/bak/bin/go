@@ -1,0 +1,23 @@
+#! /bin/bash
+
+#./mqtt_clock mqtt_clock.par &
+
+export LD_LIBRARY_PATH=/usr/share/c++-mscl; ./mqtt_us_imu mqtt_us_imu.par &
+
+python3 ../Demoni/MaxDriver/mqtt_MiniCTMax/sync.py
+
+./mqtt_ana_dig_io mqtt_ana_dig_io.par &
+
+
+./mqtt_thrusters mqtt_thrusters.par &
+
+./mqtt_pax00 mqtt_pax00.par &
+
+./mqtt_mini_ct mqtt_mini_ct.par &
+
+./mqtt_mini_svs mqtt_mini_svs.par &
+
+./mqtt_ib_ins mqtt_ib_ins.par &
+
+
+wait

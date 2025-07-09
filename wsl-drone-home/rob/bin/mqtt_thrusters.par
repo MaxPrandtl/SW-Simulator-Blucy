@@ -1,0 +1,40 @@
+# mqtt_thrusters.par file
+
+# Important note:
+# all lines starting with \r, \n, blank, #, \t are skipped!
+
+# process priority
+80
+
+# loop period expressed in milliseconds
+100
+
+# communication time out expressed in seconds 
+5
+
+# simulation flag: actual==0 / simulated==1 
+1
+
+# debug logging flag: disabled==0 / enabled==1 
+0
+
+# MQTT broker IP address
+127.0.0.1
+
+# MQTT broket TCP port
+1883
+
+# MQTT QOS
+2
+
+# MQTT topics prefix
+thrusters
+
+# MQTT timestamp topic
+clock/timestamp
+
+# serial device name
+/dev/ttyS4
+
+# serial baud rate
+115200

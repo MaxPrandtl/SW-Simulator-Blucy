@@ -1,0 +1,153 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <errno.h>
+#include <fcntl.h>
+#include <termios.h>
+#include <unistd.h>
+#include <mosquitto.h>
+#include <time.h>
+#include <signal.h>
+
+#define PROCESS_PRIORITY 80
+#define LOOP_PERIOD_MS 100
+#define COMM_TIMEOUT_S 5
+#define SIMULATION_FLAG 0
+#define DEBUG_LOGGING_FLAG 0
+#define MQTT_BROKER_IP "127.0.0.1"
+#define MQTT_BROKER_PORT 1883
+#define MQTT_QOS 2
+#define MQTT_TOPIC_PREFIX "MiniCT"
+#define MQTT_TIMESTAMP_TOPIC "clock/timestamp"
+#define SERIAL_DEVICE_NAME "/dev/ttyS7"
+#define SERIAL_BAUD_RATE 19200
+
+volatile sig_atomic_t running = 1;
+
+void handle_signal(int signal) {
+    running = 0;
+}
+
+int main() {
+    // Set process priority
+    setpriority(PRIO_PROCESS, 0, PROCESS_PRIORITY);
+
+    // Open serial port
+    int fd = open(SERIAL_DEVICE_NAME, O_RDONLY | O_NOCTTY);
+    if (fd == -1) {
+        perror("Failed to open serial port");
+        exit(EXIT_FAILURE);
+    }
+
+    // Configure serial port
+    struct termios tty;
+    if (tcgetattr(fd, &tty) != 0) {
+        perror("Failed to get serial port attributes");
+        exit(EXIT_FAILURE);
+    }
+    cfsetospeed(&tty, SERIAL_BAUD_RATE);
+    cfsetispeed(&tty, SERIAL_BAUD_RATE);
+    tty.c_cflag &= ~PARENB;
+    tty.c_cflag &= ~CSTOPB;
+    tty.c_cflag &= ~CSIZE;
+    tty.c_cflag |= CS8;
+    tty.c_cflag &= ~CRTSCTS;
+    tty.c_cflag |= CREAD | CLOCAL;
+    tty.c_iflag &= ~(IXON | IXOFF | IXANY);
+    tty.c_iflag &= ~(ICANON | ECHO | ECHOE | ISIG);
+    tty.c_oflag &= ~OPOST;
+    tty.c_cc[VMIN] = 1;
+    tty.c_cc[VTIME] = COMM_TIMEOUT_S;
+    if (tcsetattr(fd, TCSANOW, &tty) != 0) {
+        perror("Failed to set serial port attributes");
+        exit(EXIT_FAILURE);
+    }
+
+    // Set up MQTT client
+    mosquitto_lib_init();
+    struct mosquitto *mosq = mosquitto_new(NULL, true, NULL);
+    if (!mosq) {
+        perror("Failed to create MQTT client instance");
+        exit(EXIT_FAILURE);
+    }
+
+    // Connect to MQTT broker
+    int rc = mosquitto_connect(mosq, MQTT_BROKER_IP, MQTT_BROKER_PORT, 0);
+    if (rc != MOSQ_ERR_SUCCESS) {
+        fprintf(stderr, "Failed to connect to MQTT broker: %s\n", mosquitto_strerror(rc));
+        exit(EXIT_FAILURE);
+    }
+
+    // Subscribe to MQTT timestamp topic
+    char mqtt_topic[128];
+    snprintf(mqtt_topic, sizeof(mqtt_topic), "%s/%s", MQTT_TOPIC_PREFIX, MQTT_TIMESTAMP_TOPIC);
+    rc = mosquitto_subscribe(mosq, NULL, mqtt_topic, MQTT_QOS);
+    if (rc != MOSQ_ERR_SUCCESS) {
+        fprintf(stderr, "Failed to subscribe to MQTT topic '%s': %s\n", mqtt_topic, mosquitto_strerror(rc));
+        exit(EXIT_FAILURE);
+    }
+
+    // Subscribe to MQTT temperature topic
+    snprintf(mqtt_topic, sizeof(mqtt_topic), "%s/%s/%s\/temperature/g", MQTT_TOPIC_PREFIX, MQTT_TOPIC_PREFIX);
+rc = mosquitto_subscribe(mosq, NULL, mqtt_topic, MQTT_QOS);
+if (rc != MOSQ_ERR_SUCCESS) {
+    fprintf(stderr, "Failed to subscribe to MQTT topic '%s': %s\n", mqtt_topic, mosquitto_strerror(rc));
+    exit(EXIT_FAILURE);
+}
+
+// Subscribe to MQTT conductivity topic
+snprintf(mqtt_topic, sizeof(mqtt_topic), "%s/%s\/conductivity", MQTT_TOPIC_PREFIX, MQTT_TOPIC_PREFIX);
+rc = mosquitto_subscribe(mosq, NULL, mqtt_topic, MQTT_QOS);
+if (rc != MOSQ_ERR_SUCCESS) {
+    fprintf(stderr, "Failed to subscribe to MQTT topic '%s': %s\n", mqtt_topic, mosquitto_strerror(rc));
+    exit(EXIT_FAILURE);
+}
+
+// Set up signal handler
+signal(SIGINT, handle_signal);
+
+// Loop until terminated
+char buffer[1024];
+while (running) {
+    // Read from serial port
+    int n = read(fd, buffer, sizeof(buffer));
+    if (n > 0) {
+        buffer[n] = '\0';
+        char *temperature = strtok(buffer, "\t");
+        char *conductivity = strtok(NULL, "\t");
+
+        // Publish temperature to MQTT
+        snprintf(mqtt_topic, sizeof(mqtt_topic), "%s/%s/temperature", MQTT_TOPIC_PREFIX, MQTT_TOPIC_PREFIX);
+        time_t current_time = time(NULL);
+        char timestamp[32];
+        strftime(timestamp, sizeof(timestamp), "%Y-%m-%d %H:%M:%S", localtime(&current_time));
+        char payload[128];
+        snprintf(payload, sizeof(payload), "%s\t%s\t%d", temperature, timestamp, MQTT_QOS);
+        rc = mosquitto_publish(mosq, NULL, mqtt_topic, strlen(payload), payload, MQTT_QOS, false);
+        if (rc != MOSQ_ERR_SUCCESS) {
+            fprintf(stderr, "Failed to publish message to MQTT topic '%s': %s\n", mqtt_topic, mosquitto_strerror(rc));
+        }
+
+        // Publish conductivity to MQTT
+        snprintf(mqtt_topic, sizeof(mqtt_topic), "%s/%s/conductivity", MQTT_TOPIC_PREFIX, MQTT_TOPIC_PREFIX);
+        snprintf(payload, sizeof(payload), "%s\t%s\t%d", conductivity, timestamp, MQTT_QOS);
+        rc = mosquitto_publish(mosq, NULL, mqtt_topic, strlen(payload), payload, MQTT_QOS, false);
+        if (rc != MOSQ_ERR_SUCCESS) {
+            fprintf(stderr, "Failed to publish message to MQTT topic '%s': %s\n", mqtt_topic, mosquitto_strerror(rc));
+        }
+    }
+
+    // Check for incoming MQTT messages
+    rc = mosquitto_loop(mosq, LOOP_PERIOD_MS, 1);
+    if (rc != MOSQ_ERR_SUCCESS && rc != MOSQ_ERR_CONN_LOST && rc != MOSQ_ERR_NO_CONN) {
+        fprintf(stderr, "Failed to process incoming MQTT messages: %s\n", mosquitto_strerror(rc));
+    }
+}
+
+// Clean up
+mosquitto_disconnect(mosq);
+mosquitto_destroy(mosq);
+mosquitto_lib_cleanup();
+close(fd);
+
+return 0;

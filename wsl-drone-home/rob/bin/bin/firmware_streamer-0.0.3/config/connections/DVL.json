@@ -1,0 +1,54 @@
+{
+    "name"      : "DVL",
+    "enabled"   : true,
+    "log_level" : "debug",
+    "data_format":
+    {
+        "name"      : "df21",
+        "path"      : "../config/data_format",
+        "log_level" : "info"
+    },
+    "incoming":
+    [
+        {
+            "protocol"   : "serial"      ,
+            "enabled"    : true          ,
+            "log_level"  : "info"        ,
+            "name"       : "DVL input"   ,
+            "port"       : "/dev/ttyACM0",
+            "rate"       : 115200        ,
+            "data_format": "df21"        ,
+            "payload"    : "raw"
+        }
+    ],
+    "outgoing":
+    [
+        {
+            "protocol"      : "mqtt"         ,
+            "enabled"       : true           ,
+            "log_level"     : "info"         ,
+            "name"          : "telemetry/DVL",
+            "broker_address": "127.0.0.1"    ,
+            "broker_port"   : 1883           ,
+            "data_format"   : "df21"         ,
+            "qos"           : 1              ,
+            "topics"        :
+            [
+                "raw",
+                "df21.parts"
+            ]
+        },
+        {
+            "protocol"      : "udp"      ,
+            "enabled"       : true       ,
+            "log_level"     : "info"    ,
+            "name"          : "FOG_UDP"  ,
+            "local_address" : "127.0.0.1",
+            "local_port"    : 12346      ,
+            "server_address": "127.0.0.1",
+            "server_port"   : 12345      ,
+            "data_format"   : "df21"     ,
+            "payload"       : "raw"      
+        }
+    ]
+}

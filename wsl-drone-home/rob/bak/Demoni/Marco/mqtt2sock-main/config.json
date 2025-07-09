@@ -1,0 +1,109 @@
+{
+    "id": "Blucy",
+    "host": "127.0.0.1",
+    "connections": [{
+        "name": "DVL_raw", 
+        "incoming": ["telemetry/DVL/raw"],
+        "outgoing": [{
+            "protocol": "udp",
+            "ip": "192.168.36.180",
+            "port": "50005"
+        }],
+        "transformations": {
+	}
+    },{
+	"enabled": false,
+        "name": "MINISVS_Qinsy", 
+        "incoming": ["miniSVS/pressure", "miniSVS/soundSpeed"],
+        "outgoing": [{
+            "protocol": "udp",
+            "ip": "192.168.29.235",
+            "port": "5602"
+        }],
+        "transformations": {
+            "mode": "script",
+            "script": "MINISVS_ReadQinsy.gen_minisvs",
+            "params": ["miniSVS/soundSpeed"]
+        }
+    }, {
+	"enabled": false,
+        "name": "MINISVS",
+        "incoming": ["miniSVS/pressure", "miniSVS/soundSpeed"],
+        "outgoing": [{
+            "protocol": "udp",
+            "ip": "255.255.255.255",
+            "port": "50002"
+        }], 
+        "transformations": {
+            "mode": "script",
+            "script": "MINISVS_READ.gen_minisvs",
+            "params": ["miniSVS/pressure", "miniSVS/soundSpeed"]
+        }
+    }, { 
+	"name": "MINISVSSSP",
+	"enabled": false,
+	"incoming": ["miniSVS/soundSpeed"],
+	"outgoing": [{
+            "protocol": "udp",
+            "ip": "255.255.255.255",
+            "port": "50002"
+        }],
+	"transformations":{
+	    "mode": "script",
+            "script": "MINISVSSP_Read.gen_minisvssp",
+            "params": ["miniSVS/soundSpeed"]
+	}
+    }, {	
+        "name": "GPGGA",
+	"enabled": false,
+        "incoming": [
+            {"topic":"us_imu/utcTimestampNanoseconds", "qos": 1}, 
+            {"topic": "us_imu/latitude", "qos": 1},
+            {"topic":"us_imu/longitude", "qos":1},
+            "us_imu/utcTimestampFlags",
+            "us_imu/heightAboveEllipsoid",
+            "us_imu/heightAboveMSL",
+            "us_imu/horizontalAccuracy"
+        ],
+        "outgoing": [{
+            "protocol": "udp",
+            "ip": "255.255.255.255",
+            "port": "50001"
+        }],
+        "transformations": {
+            "mode": "script",
+            "script": "GPGGA_Read.gen_gga",
+            "params": [
+                "us_imu/utcTimestampNanoseconds", 
+                "us_imu/latitude",
+                "us_imu/longitude",
+                "us_imu/utcTimestampFlags",
+                "us_imu/heightAboveMSL",
+                "us_imu/heightAboveEllipsoid",
+                "us_imu/horizontalAccuracy"
+            ]
+        }
+    }, {
+        "name": "GPZDA",
+	"enabled": false,
+        "incoming": [
+            {"topic":"us_imu/utcTimestampNanoseconds", "qos": 1}, 
+            {"topic": "us_imu/latitude", "qos": 1},
+            {"topic":"us_imu/longitude", "qos":1},
+            "us_imu/utcTimestampFlags",
+            "us_imu/heightAboveEllipsoid",
+            "us_imu/heightAboveMSL",
+            "us_imu/horizontalAccuracy"
+        ],
+        "outgoing": [{
+            "protocol": "udp",
+            "ip": "255.255.255.255",
+            "port": "50001"
+        }],
+        "transformations": {
+            "mode": "script",
+            "script": "GPZDA_Read.gen_zda",
+            "params": ["us_imu/utcTimestampNanoseconds", "us_imu/latitude","us_imu/longitude"]
+        }
+    }]
+}

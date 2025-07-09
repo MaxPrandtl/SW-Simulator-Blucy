@@ -1,0 +1,80 @@
+I canali digitali dei moduli PC-104 sono:
+
+00 - Diamond 0 - 00 - A0  - OUT - Power on Thruster Power motor 1 - Active high
+01 - Diamond 0 - 01 - A1  - OUT - Power on Thruster Power motor 2 - Active high
+02 - Diamond 0 - 02 - A2  - OUT - Power on Thruster Power motor 3 - Active high
+03 - Diamond 0 - 03 - A3  - OUT - Power on Thruster Power motor 4 - Active high
+04 - Diamond 0 - 04 - A4  - OUT - Power on Thruster Power motor 5 - Active high
+05 - Diamond 0 - 05 - A5  - OUT - Power on Thruster Power motor 6 - Active high
+06 - Diamond 0 - 06 - A6  - OUT - Power on Altimeter PA200 - Active high
+07 - Diamond 0 - 07 - A7  - OUT - Power on Acoustic modem USBL Evologics - Active high
+08 - Diamond 0 - 08 - B0  - OUT - Power on DVL - Active high
+09 - Diamond 0 - 09 - B1  - OUT - Power on miniCT - Active high
+10 - Diamond 0 - 10 - B2  - OUT - Power on miniSVS - Active high 
+11 - Diamond 0 - 11 - B3  - OUT - Power on lights UP - Active high
+12 - Diamond 0 - 12 - B4  - OUT - Power on lights DOWN - Active high
+13 - Diamond 0 - 13 - B5  - OUT - Power on lights MIDDLE - Active high
+14 - Diamond 0 - 14 - B6  - OUT - Power on 48 V POE Gbit Ethernet camera 1
+15 - Diamond 0 - 15 - B7  - OUT - Available (ex Power on 48 V POE Gbit Ethernet camera 2)
+16 - Diamond 0 - 16 - CL0 - IN  - Status Thruster Power on motor 1 - Active high
+17 - Diamond 0 - 17 - CL1 - IN  - Status Thruster Power on motor 2 - Active high
+18 - Diamond 0 - 18 - CL2 - IN  - Status Thruster Power on motor 3 - Active high
+19 - Diamond 0 - 19 - CL3 - IN  - Status Thruster Power on motor 4 - Active high
+20 - Diamond 0 - 20 - CH0 - IN  - Status Thruster Power on motor 5 - Active high
+21 - Diamond 0 - 21 - CH1 - IN  - Status Thruster Power on motor 6 - Active high
+22 - Diamond 0 - 22 - CH2 - IN  - Water leak sensor
+23 - Diamond 0 - 23 - CH3 - IN  - Available
+24 - Diamond 1 - 00 - A0  - OUT - Power on digital still camera
+25 - Diamond 1 - 01 - A1  - OUT - Contact switch on/off multibeam
+26 - Diamond 1 - 02 - A2  - OUT - Contact switch on/off HD camera
+27 - Diamond 1 - 03 - A3  - OUT - Available (ex contact digital still camera)
+28 - Diamond 1 - 04 - A4  - OUT - Power on payload1 5 V - active high
+29 - Diamond 1 - 05 - A5  - OUT - Power on payload1 12 V - active high
+30 - Diamond 1 - 06 - A6  - OUT - Power on payload1 24 V - active high
+31 - Diamond 1 - 07 - A7  - OUT - Power on payload1 5 V - active high
+32 - Diamond 1 - 08 - B0  - OUT - Power on payload1 5 V - active high
+33 - Diamond 1 - 09 - B1  - OUT - Power on payload1 5 V - active high
+34 - Diamond 1 - 10 - B2  - OUT - Available (ex power on 48 V POE Gbit Ethernet camera 3)
+35 - Diamond 1 - 11 - B3  - OUT - Power on F.O. Mux-demux 1
+36 - Diamond 1 - 12 - B4  - OUT - Power on F.O. Mux-demux 2
+37 - Diamond 1 - 13 - B5  - OUT - Available (ex Power on DCDC payload 5VDC)
+38 - Diamond 1 - 14 - B6  - OUT - Available (ex Power on DCDC payload 12VDC)
+39 - Diamond 1 - 15 - B7  - OUT - Available (ex Power on DCDC payload 24VDC)
+40 - Diamond 1 - 16 - CL0 - OUT - Available (ex Power on DCDC payload light)
+41 - Diamond 1 - 17 - CL1 - OUT - Power on/off second CPU
+42 - Diamond 1 - 18 - CL2 - OUT - Available
+43 - Diamond 1 - 19 - CL3 - OUT - Available
+44 - Diamond 1 - 20 - CH0 - OUT - Available
+45 - Diamond 1 - 21 - CH1 - OUT - Available
+46 - Diamond 1 - 22 - CH2 - OUT - Available
+47 - Diamond 1 - 23 - CH3 - OUT - Available
+
+================================================================================
+
+I canali analogici in ingresso dei moduli PC-104 sono:
+00 - Diamond 0 - 00 - Tensione di alimentazione in decimi di Volt
+01 - Diamond 0 - 01 - Temperatura interna in decimi di grado centigrado
+
+================================================================================
+
+I canali seriali della CPU sono:
+/dev/ttyS0 - AHRS Microstrain - nessun digitale, sempre accesa
+/dev/ttyS1 (non usata)
+/dev/ttyS2 (non usabile)
+/dev/ttyS3 (non usata)
+
+I canali seriali della scheda PC/104-plus sono:
+/dev/ttyS4  - thrusthers  - digitali D00-D05 - 115200 bps
+/dev/ttyS5  - DVL         - digitale D08
+/dev/ttyS6  - Radiomodem  - nessun digitale - 9600 bps
+/dev/ttyS7  - MiniCT      - digitale D09 - 19200 bps
+/dev/ttyS8  - USBL        - digitale D07
+/dev/ttyS9  - PA200       - digitale D06 - 9600 bps
+/dev/ttyS10 - MiniSVS     - digitale D10 - 19200 bps
+/dev/ttyS11 - libero
+
+I canali seriali della scheda USB sono:
+/dev/ttyUSB0 - libero
+/dev/ttyUSB1 - libero
+/dev/ttyUSB2 - libero
+/dev/ttyUSB3 - libero

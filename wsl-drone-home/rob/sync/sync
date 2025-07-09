@@ -1,0 +1,10 @@
+#! /bin/bash
+
+#./mqtt_clock mqtt_clock.par &
+
+#export LD_LIBRARY_PATH=/usr/share/c++-mscl; ../bin/mqtt_us_imu ../bin/mqtt_us_imu.par &
+
+
+python3 ./sync.py
+
+#killall mqtt_us_imu

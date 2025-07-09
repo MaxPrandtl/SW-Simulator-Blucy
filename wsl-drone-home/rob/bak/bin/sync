@@ -1,0 +1,9 @@
+#! /bin/bash
+
+#./mqtt_clock mqtt_clock.par &
+
+export LD_LIBRARY_PATH=/usr/share/c++-mscl; ./mqtt_us_imu mqtt_us_imu.par &
+
+python3 ./sync.py
+
+sudo killall mqtt_us_imu

@@ -1,0 +1,139 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <errno.h>
+#include <fcntl.h>
+#include <termios.h>
+#include <unistd.h>
+#include <mosquitto.h>
+#include <signal.h>
+
+#define PROCESS_PRIORITY 80
+#define LOOP_PERIOD_MS 100
+#define COMM_TIMEOUT_S 5
+#define SIMULATION_FLAG 0
+#define DEBUG_LOGGING_FLAG 0
+
+#define MQTT_BROKER_IP "127.0.0.1"
+#define MQTT_BROKER_PORT 1883
+#define MQTT_QOS 2
+#define MQTT_TOPIC_PREFIX "miniCT"
+#define MQTT_TIMESTAMP_TOPIC "clock/timestamp"
+#define SERIAL_DEVICE_NAME "/dev/ttyS7"
+#define SERIAL_BAUD_RATE 19200
+
+static int running = 1;
+
+void handle_signal(int signal) {
+    running = 0;
+}
+
+int main() {
+    // Set process priority
+    if (setpriority(PRIO_PROCESS, 0, PROCESS_PRIORITY) != 0) {
+        fprintf(stderr, "Failed to set process priority: %s\n", strerror(errno));
+        exit(EXIT_FAILURE);
+    }
+
+    // Open serial device
+    int fd = open(SERIAL_DEVICE_NAME, O_RDWR | O_NOCTTY | O_SYNC);
+    if (fd == -1) {
+        fprintf(stderr, "Failed to open serial device: %s\n", strerror(errno));
+        exit(EXIT_FAILURE);
+    }
+
+    // Configure serial port
+    struct termios tty;
+    memset(&tty, 0, sizeof(tty));
+    if (tcgetattr(fd, &tty) != 0) {
+        fprintf(stderr, "Failed to get serial port attributes: %s\n", strerror(errno));
+        exit(EXIT_FAILURE);
+    }
+    cfsetospeed(&tty, SERIAL_BAUD_RATE);
+    cfsetispeed(&tty, SERIAL_BAUD_RATE);
+    tty.c_cflag |= (CLOCAL | CREAD);
+    tty.c_cflag &= ~CSIZE;
+    tty.c_cflag |= CS8;
+    tty.c_cflag &= ~PARENB;
+    tty.c_cflag &= ~CSTOPB;
+    tty.c_cflag &= ~CRTSCTS;
+    tty.c_lflag &= ~(ICANON | ECHO | ECHOE | ISIG);
+    tty.c_iflag &= ~(IXON | IXOFF | IXANY);
+    tty.c_oflag &= ~OPOST;
+    tty.c_cc[VMIN] = 0;
+    tty.c_cc[VTIME] = COMM_TIMEOUT_S * 10;
+    if (tcsetattr(fd, TCSANOW, &tty) != 0) {
+        fprintf(stderr, "Failed to set serial port attributes: %s\n", strerror(errno));
+        exit(EXIT_FAILURE);
+    }
+
+    // Initialize MQTT library
+    mosquitto_lib_init();
+
+    // Create MQTT client
+    struct mosquitto *mosq = mosquitto_new(NULL, true, NULL);
+    if (mosq == NULL) {
+        fprintf(stderr, "Failed to create MQTT client\n");
+        exit(EXIT_FAILURE);
+    }
+
+    // Connect to MQTT broker
+    int rc = mosquitto_connect(mosq, MQTT_BROKER_IP, MQTT_BROKER_PORT, 0);
+    if (rc != MOSQ_ERR_SUCCESS) {
+        fprintf(stderr, "Failed to connect to MQTT broker: %s\n", mosquitto_strerror(rc));
+        exit(EXIT_FAILURE);
+    }
+    // Subscribe to timestamp topic
+char mqtt_topic[128];
+snprintf(mqtt_topic, sizeof(mqtt_topic), "%s/%s", MQTT_TOPIC_PREFIX, MQTT_TIMESTAMP_TOPIC);
+rc = mosquitto_subscribe(mosq, NULL, mqtt_topic, MQTT_QOS);
+if (rc != MOSQ_ERR_SUCCESS) {
+    fprintf(stderr, "Failed to subscribe to MQTT topic %s: %s\n", mqtt_topic, mosquitto_strerror(rc));
+    exit(EXIT_FAILURE);
+}
+
+// Set up signal handler
+signal(SIGINT, handle_signal);
+signal(SIGTERM, handle_signal);
+
+// Read and send data from serial port
+char buf[256];
+while (running) {
+    int n = read(fd, buf, sizeof(buf));
+    if (n > 0) {
+        buf[n] = '\0';
+        printf("Read from serial port: %s", buf);
+
+        // Publish data to MQTT broker
+        snprintf(mqtt_topic, sizeof(mqtt_topic), "%s/%s", MQTT_TOPIC_PREFIX, "data");
+        rc = mosquitto_publish(mosq, NULL, mqtt_topic, strlen(buf), buf, MQTT_QOS, false);
+        if (rc != MOSQ_ERR_SUCCESS) {
+            fprintf(stderr, "Failed to publish to MQTT topic %s: %s\n", mqtt_topic, mosquitto_strerror(rc));
+            exit(EXIT_FAILURE);
+        }
+
+        // Get current time and publish timestamp to MQTT broker
+        time_t timestamp = time(NULL);
+        char timestamp_str[20];
+        snprintf(timestamp_str, sizeof(timestamp_str), "%ld", timestamp);
+        rc = mosquitto_publish(mosq, NULL, mqtt_topic, strlen(timestamp_str), timestamp_str, MQTT_QOS, false);
+        if (rc != MOSQ_ERR_SUCCESS) {
+            fprintf(stderr, "Failed to publish timestamp to MQTT topic %s: %s\n", mqtt_topic, mosquitto_strerror(rc));
+            exit(EXIT_FAILURE);
+        }
+    }
+
+    usleep(LOOP_PERIOD_MS * 1000);
+}
+
+// Disconnect from MQTT broker
+mosquitto_disconnect(mosq);
+mosquitto_destroy(mosq);
+
+// Clean up MQTT library
+mosquitto_lib_cleanup();
+
+// Close serial port
+close(fd);
+
+return 0;
