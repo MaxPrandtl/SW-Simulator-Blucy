@@ -1,7 +1,7 @@
 #! /bin/bash
 
 #./mqtt_clock mqtt_clock.par &
-export LD_LIBRARY_PATH=/usr/share/c++-mscl;; ./mqtt_us_imu mqtt_us_imu.par &
+export LD_LIBRARY_PATH=/usr/share/c++-mscl; ./mqtt_us_imu mqtt_us_imu.par &
 
 
 # Load libraries for C++ programs to work
