@@ -15,14 +15,17 @@ Open PowerShell as Administrator and run:
 wsl --install
 ```
 ---
-2️⃣ Install Ubuntu 22.04
+
+###2️⃣ Install Ubuntu 22.04
 Install Ubuntu using this command:
 ```powershell
 wsl --install -d Ubuntu-22.04
 ```
 Alternatively, install it via the Microsoft Store.
+
 ---
-3️⃣ Configure WSL user
+
+###3️⃣ Configure WSL user
 During the first launch, Ubuntu will ask for a default user. Use:
 
 Username: rob
@@ -30,4 +33,5 @@ Username: rob
 Password: any secure password of your choice
 
 This user will have sudo privileges and will be used to run all commands.
+
 ---
