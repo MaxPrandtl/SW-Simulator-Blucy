@@ -37,3 +37,50 @@ Password: any secure password of your choice
 This user will have sudo privileges and will be used to run all commands.
 
 ---
+
+### 4️⃣ Update Ubuntu packages
+Run these commands inside the Ubuntu (WSL) terminal:
+```powershell
+sudo apt-get update
+sudo add-apt-repository universe
+sudo apt-get update
+```
+
+---
+
+### 5️⃣ Install development tools and dependencies
+```powershell
+sudo apt-get install -y build-essential cmake gdb git pkg-config valgrind
+sudo apt-get install -y python3 python3-pip python3-venv
+sudo apt-get install -y libboost-all-dev libssl-dev libffi-dev libtool autoconf automake
+```
+
+---
+
+### 6️⃣ Install and configure Mosquitto (MQTT broker)
+Install the broker and clients:
+```powershell
+sudo apt-get install -y mosquitto mosquitto-clients
+```
+Configure Mosquitto:
+```powershell
+sudo nano /etc/mosquitto/mosquitto.conf
+```
+Replace the content with:
+```powershell
+pid_file /var/run/mosquitto/mosquitto.pid
+persistence true
+persistence_location /var/lib/mosquitto/
+log_dest file /var/log/mosquitto/mosquitto.log
+
+# Allow anonymous access (for testing only)
+allow_anonymous true
+listener 1883
+```
+Save with CTRL+O, press Enter, then exit with CTRL+X.
+
+Enable Mosquitto to start automatically:
+```powershell
+sudo systemctl enable mosquitto
+sudo systemctl start mosquitto
+```
