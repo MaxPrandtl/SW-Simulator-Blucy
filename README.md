@@ -99,10 +99,4 @@ If you prefer to download the repository as a `.zip` file (instead of using Git)
 
 3. Extract the ZIP archive to your **Windows Desktop**
 
-You will have a folder like this on your desktop:
-SW-Simulator-Blucy-main/
-├── drivers
-│ └── c++-mscl
-├── wsl-drone-home
-│ └── rob
-└── README.md
+<pre lang="markdown"> You will have a folder like this on your Desktop after extracting the ZIP: ``` SW-Simulator-Blucy-main/ ├── drivers/ │ └── c++-mscl/ ├── wsl-drone-home/ │ └── rob/ │ ├── bak/ │ ├── bin/ │ ├── debs/ │ ├── Demoni/ │ ├── ixblue_stdbin_decoder/ │ ├── Roboworld/ │ ├── sync/ │ ├── .bash_logout │ ├── .bashrc │ ├── .profile │ ├── sushidrop_start.sh │ └── sushidrop_start_MOD.sh ├── README.md ``` - `wsl-drone-home/rob/` → firmware to copy into your WSL home (`~/`) - `drivers/c++-mscl/` → C++ sensor driver to move into `/usr/share/` </pre>
