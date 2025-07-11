@@ -86,9 +86,9 @@ sudo systemctl start mosquitto
 ```
 ---
 
-7️⃣ Manual Installation of Firmware (`rob`) and Drivers (`c++-mscl`)
+7️⃣ Manual Download of Firmware (`rob`) and Drivers (`c++-mscl`)
 
-If you prefer to download the repository as a `.zip` file (instead of using Git), follow these steps:
+Download the repository as a `.zip` file (instead of using Git) following these steps:
 
 #### 📥 A. Download and extract the project
 
@@ -123,3 +123,65 @@ SW-Simulator-Blucy-main/
 
 - `wsl-drone-home/rob/` → contains the custom firmware environment
 - `drivers/c++-mscl/` → contains C++ sensor drivers
+
+---
+
+### 8️⃣ Copy firmware and drivers into WSL
+
+After extracting the ZIP folder to your Windows Desktop, run the following commands in your **Ubuntu (WSL)** terminal to properly copy the firmware and the drivers into the correct locations.
+
+---
+
+#### 📁 A. Copy the entire firmware content (including hidden files) into `/home/rob`
+
+```bash
+sudo cp -r "/mnt/c/Users/<YourUsername>/Desktop/SW-Simulator-Blucy-main/wsl-drone-home/rob/." ~/
+```
+
+> Replace `<YourUsername>` with your actual Windows username.  
+> If your username includes spaces (e.g. `Max Menghini`), wrap the path in quotes as shown above.
+
+✅ This command:
+- Copies all **files and folders** from `rob/`, including **hidden files** (e.g. `.bashrc`, `.profile`)
+- Does **not** create an extra `rob/` folder
+- Merges everything directly into your WSL home (`/home/rob`)
+
+To verify the result:
+
+```bash
+ls -la ~
+```
+
+You should see all firmware-related files, such as:
+
+```
+sushidrop_start.sh
+Demoni/
+Roboworld/
+.bashrc
+.profile
+...
+```
+
+If needed, fix file ownership with:
+
+```bash
+sudo chown -R rob:rob ~/
+```
+
+---
+
+#### ⚙️ B. Copy the `c++-mscl` driver folder into `/usr/share/`
+
+```bash
+sudo cp -r "/mnt/c/Users/<YourUsername>/Desktop/SW-Simulator-Blucy-main/drivers/c++-mscl" /usr/share/
+```
+
+✅ This creates the folder `/usr/share/c++-mscl/` with all its subfolders and hidden files.
+
+To check:
+
+```bash
+ls -la /usr/share/c++-mscl
+```
+
