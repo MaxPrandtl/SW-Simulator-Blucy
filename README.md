@@ -184,4 +184,117 @@ To check:
 ```bash
 ls -la /usr/share/c++-mscl
 ```
+---
 
+### 9️⃣ Launch the simulated firmware
+
+Once all the firmware files have been copied, you can start the simulated Blucy firmware environment inside WSL.
+
+---
+
+#### 🌐 A. Assign the virtual IP address
+
+To simulate the correct network configuration, assign the IP address `192.168.29.111` to the WSL network interface:
+
+```bash
+sudo ip addr add 192.168.29.111/24 dev eth0
+```
+
+This step is required for the simulator to communicate as if it were the actual onboard system.
+
+> ⚠️ This IP will be reset on reboot. To make it persistent, consider adding the command to `~/.bashrc` or a startup script.
+
+---
+
+#### 🔐 B. Make scripts and binaries executable
+
+The startup script launches other internal scripts and compiled binaries.  
+Make sure everything is executable by running:
+
+```bash
+chmod -R +x ~/Demoni ~/Roboworld ~/ixblue_stdbin_decoder ~/sync ~/bin ~/sushidrop_start*.sh
+```
+
+✅ This command sets execution permissions recursively for all subfolders and `.sh` scripts needed by the system.
+
+> You can also apply permissions to the entire home directory (use with caution):
+
+```bash
+chmod -R +x ~/
+```
+
+---
+
+#### 🚀 C. Start the firmware
+
+Launch the system using the provided startup script:
+
+```bash
+cd ~
+./sushidrop_start_MOD.sh
+```
+
+The script will initialize all required modules, services, and MQTT-based communication for the simulated firmware.
+
+✅ If the launch is successful, you will see logs and active processes related to the drone simulator.
+
+---
+
+### 🔟 Verify firmware simulation using MQTT Explorer
+
+To verify that the simulated firmware is publishing correctly over MQTT, we recommend using [MQTT Explorer](https://mqtt-explorer.com/), a free and user-friendly GUI tool for monitoring MQTT topics in real time.
+
+---
+
+#### 🧰 A. Install MQTT Explorer
+
+Download it from the official website:  
+👉 [https://mqtt-explorer.com](https://mqtt-explorer.com)
+
+It's available for Windows, macOS, and Linux.
+
+---
+
+#### 🌐 B. Connect to the Mosquitto broker
+
+Once launched, click **"New Connection"** and use the following parameters:
+
+- **Name**: `WSL Simulator`
+- **Host**: `localhost`
+- **Port**: `1883`
+- **Protocol**: `MQTT` (default)
+
+No username or password is required (since `allow_anonymous true` is set in Mosquitto).
+
+✅ Click **"Connect"**.
+
+---
+
+#### 📡 C. Check active topics
+
+If everything is working correctly, you will see a live tree of MQTT topics being published by the simulated firmware.
+
+You may see topics such as:
+
+```
+rob/pose/...
+rob/mission_status
+rob/control/...
+...
+```
+
+These confirm that the firmware is running and communicating over MQTT as expected.
+
+---
+
+#### 🧪 D. Optional: subscribe via terminal
+
+You can also verify topics using the command line inside WSL:
+
+```bash
+mosquitto_sub -h localhost -t "#" -v
+```
+
+This will print all published messages to the terminal in real time.
+
+---
