@@ -98,7 +98,8 @@ If you prefer to download the repository as a `.zip` file (instead of using Git)
 2. Click the green **“Code”** button and select **“Download ZIP”**
 
 3. Extract the ZIP archive to your **Windows Desktop**
-   You will have a folder like this on your desktop:
+
+You will have a folder like this on your desktop:
 ```
 SW-Simulator-Blucy-main/
 ├── drivers/
