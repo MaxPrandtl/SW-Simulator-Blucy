@@ -270,21 +270,29 @@ No username or password is required (since `allow_anonymous true` is set in Mosq
 
 ---
 
-#### 📡 C. Check active topics
+#### 📡 C. Explore active topics
 
-If everything is working correctly, you will see a live tree of MQTT topics being published by the simulated firmware.
-
-You may see topics such as:
+If everything is set up correctly, you will see a live tree of MQTT topics being published by the simulator. These include:
 
 ```
-rob/pose/...
-rob/mission_status
-rob/control/...
-...
+miniSVS/#
+filters/#
+controls/#
+us_imu/#
+ib_ins/#
+ana_dig_io/#
+HMI/#
+sensors/#
+NGC/#
+thrusters/#
+miniCT/#
+telemetry/DVL/raw
+NMEA/#
+clock/#
+pa200/#
 ```
 
-These confirm that the firmware is running and communicating over MQTT as expected.
-
+Each topic (and its subtopics) represents a data stream related to control signals, sensor feedback, or mission status from the simulated Blucy firmware.
 ---
 
 #### 🧪 D. Optional: subscribe via terminal
