@@ -1,0 +1,11 @@
+$primary = #0B3340
+$menu_btn_color = #193849
+$menu_btn_hover = #192E39
+$light = #26526A
+$dark = #04191E
+$text_color = white
+$secondary = rgb(9, 40, 47)
+$info = rgb(31, 83, 94)
+$highlight = rgb(46, 138, 159)
+$focus_border_color = rgb(45, 78, 98)
+$disabled_color = rgba(255, 255, 255, 100)

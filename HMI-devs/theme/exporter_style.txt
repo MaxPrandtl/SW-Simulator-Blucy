@@ -1,0 +1,76 @@
+* {
+	background-color: $primary; 
+  color: $text_color;
+	border-radius: 10px;
+	font-size: 16px;
+}
+
+QLabel {
+	font-size: 18px;
+}
+
+QGroupBox > * {
+  background-color: none;
+}
+
+QLineEdit {
+	background-color: $dark;
+	font-size: 20px;
+	padding: 10px;
+	qproperty-frame: false ;
+}
+
+QLineEdit:focus{
+	border: 2px solid $focus_border_color;
+	padding: 8px;
+}
+
+QPushButton {
+	border: 1px solid transparent;
+	font-size: 20px;
+	padding: 10px 10px;
+	text-align: center;
+}
+
+QPushButton:disabled {
+	color: rgba(255, 255, 255, 100);
+}
+
+QGroupBox, QFrame {
+  background-color: $dark;
+}
+
+QLabel[bg="none"] {
+	background-color: none;
+}
+
+QPushButton[color='primary'] {
+  background-color: $primary;
+}
+
+QPushButton[color='primary']:hover{
+  background-color: $secondary;
+}
+
+QPushButton[color='highlight']:enabled{
+  background-color: $info;
+	color: white;
+}
+
+QPushButton[color='highlight']:hover{
+  background-color: $highlight;
+}
+
+QPushButton[color="highlight"]:disabled{
+  background-color: $info;
+	color: $disabled_color;
+}
+
+QPushButton[color="secondary"] {
+	background-color: $secondary;
+	color: white;
+}
+
+QPushButton[color="secondary"]:hover {
+	background-color: $dark;k
+}

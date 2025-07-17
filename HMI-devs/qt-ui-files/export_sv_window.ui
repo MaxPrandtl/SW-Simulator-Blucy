@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>Form</class>
+ <widget class="QWidget" name="Form">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>739</width>
+    <height>501</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">* {
+	background-color: rgb(9, 51, 64); 
+	border-radius: 10px;
+	font-size: 16px;
+}
+
+QLabel {
+	font-size: 18px;
+}
+
+QLineEdit {
+	background-color: rgb(8, 25, 29);
+	font-size: 20px;
+	padding: 10px;
+	qproperty-frame: false ;
+}
+
+QLineEdit:focus{
+	outline: none !important;
+	border: 2px solid rgb(45, 75, 99)
+}
+
+QPushButton {
+	border: 1px solid transparent;
+	font-size: 20px;
+	padding: 10px 10px;
+	text-align: center;
+}
+
+QPushButton:disabled {
+	color: rgba(255, 255, 255, 100);
+}</string>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="leftMargin">
+    <number>0</number>
+   </property>
+   <property name="topMargin">
+    <number>0</number>
+   </property>
+   <property name="rightMargin">
+    <number>0</number>
+   </property>
+   <property name="bottomMargin">
+    <number>0</number>
+   </property>
+   <item>
+    <widget class="QWidget" name="central_widget" native="true">
+     <property name="styleSheet">
+      <string notr="true"/>
+     </property>
+     <layout class="QGridLayout" name="gridLayout_3" columnstretch="0,0">
+      <item row="2" column="1">
+       <widget class="QLineEdit" name="export_profile_file_name"/>
+      </item>
+      <item row="0" column="0" alignment="Qt::AlignLeft">
+       <widget class="QPushButton" name="export_source_profile_btn">
+        <property name="cursor">
+         <cursorShape>PointingHandCursor</cursorShape>
+        </property>
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
+        <property name="text">
+         <string>Source</string>
+        </property>
+        <property name="color" stdset="0">
+         <string>secondary</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="1">
+       <widget class="QLineEdit" name="export_site_info"/>
+      </item>
+      <item row="4" column="1">
+       <widget class="QLineEdit" name="export_tare"/>
+      </item>
+      <item row="2" column="0">
+       <widget class="QLabel" name="label_3">
+        <property name="text">
+         <string>Exported file name</string>
+        </property>
+        <property name="bg" stdset="0">
+         <string>none</string>
+        </property>
+       </widget>
+      </item>
+      <item row="4" column="0">
+       <widget class="QLabel" name="label_2">
+        <property name="text">
+         <string>Tare</string>
+        </property>
+        <property name="bg" stdset="0">
+         <string>none</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0" alignment="Qt::AlignLeft">
+       <widget class="QPushButton" name="export_destination_folder_btn">
+        <property name="cursor">
+         <cursorShape>PointingHandCursor</cursorShape>
+        </property>
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
+        <property name="text">
+         <string>Destination</string>
+        </property>
+        <property name="color" stdset="0">
+         <string>secondary</string>
+        </property>
+       </widget>
+      </item>
+      <item row="3" column="0" alignment="Qt::AlignLeft">
+       <widget class="QLabel" name="label">
+        <property name="text">
+         <string>Site info</string>
+        </property>
+        <property name="bg" stdset="0">
+         <string>none</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="1">
+       <widget class="QLabel" name="export_destination_profile_folder_label">
+        <property name="font">
+         <font>
+          <pointsize>-1</pointsize>
+         </font>
+        </property>
+        <property name="acceptDrops">
+         <bool>true</bool>
+        </property>
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
+        <property name="text">
+         <string>Destination path</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QLabel" name="export_source_profile_file_label">
+        <property name="font">
+         <font>
+          <pointsize>-1</pointsize>
+         </font>
+        </property>
+        <property name="acceptDrops">
+         <bool>true</bool>
+        </property>
+        <property name="styleSheet">
+         <string notr="true"/>
+        </property>
+        <property name="text">
+         <string>Source CTD file</string>
+        </property>
+       </widget>
+      </item>
+      <item row="5" column="0">
+       <widget class="QPushButton" name="export_profile_btn">
+        <property name="cursor">
+         <cursorShape>PointingHandCursor</cursorShape>
+        </property>
+        <property name="text">
+         <string>Export</string>
+        </property>
+        <property name="color" stdset="0">
+         <string>highlight</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

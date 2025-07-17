@@ -1,0 +1,11 @@
+$primary = #B6D1D7
+$menu_btn_color = #D1D9DE
+$menu_btn_hover = #96B3C5
+$light = white
+$dark = #6498A8
+$text_color = black
+$secondary = #87ADBD
+$info = #397C90
+$highlight = #108BB1
+$focus_border_color = rgb(45, 78, 98)
+$disabled_color = gray

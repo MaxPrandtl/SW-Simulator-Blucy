@@ -1,0 +1,321 @@
+* {
+	padding: 0px;
+	margin: 0px;
+	color: $text_color;
+	background-color: $primary;
+	border-radius: 10px;
+}
+
+QFrame {
+	border: none;
+}
+
+QPushButton {
+	border: 1px solid transparent;
+	font-size: 20px;
+	padding: 10px 10px;
+	text-align: left;
+}
+
+QPushButton:disabled {
+	color: $disabled_color;
+}
+
+QLabel[bg="none"] {
+	background-color: none;
+}
+
+/* Menu */
+
+QPushButton[role="menu-btn"] {
+	background-color: $menu_btn_color;
+}
+
+QPushButton[role="menu-btn"]:hover{
+	background-color: $menu_btn_hover;
+}
+
+#leftMenuContainer {
+	background-color: $light;
+	border-radius: 0px;
+}
+
+#leftMenuContainer > QWidget {
+	background-color: none;
+}
+
+
+/* StackedWidget */
+
+#main_content_widget QLabel {
+	padding: 0;
+	font-size: 20px;
+}
+
+#main_content_widget QWidget[bg="dark"]{
+	background-color: $dark;
+}
+
+#main_content_widget QWidget[bg="primary"]{
+	background-color: $primary;
+}
+
+
+#main_content_widget QFrame[bg="dark"]{
+	background-color: $dark;
+}
+
+#main_content_widget QFrame[bg="none"]{
+	background-color: none;
+}
+
+#main_content_widget QWidget {
+	background-color: $secondary;
+}
+
+#main_content_widget QPushButton[bg="primary"]{
+	background-color: $primary;
+}
+
+#main_content_widget QPushButton[bg="primary"]:hover{
+	background-color: $secondary;
+}
+
+#main_content_widget QPushButton[bg="info"]{
+	background-color: $info;
+	color: white;
+}
+
+#main_content_widget QPushButton[bg="info"]:disabled{
+	color: $disabled_color;
+}
+
+#main_content_widget QPushButton[bg="info"]:hover{
+	background-color: $highlight;
+}
+
+#main_content_widget QSpinBox, QDoubleSpinBox {
+	font-size: 20px;
+	border-radius: none;
+	border-top-left-radius: 5px;
+	border-bottom-left-radius: 5px;
+	padding-left: 5px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+}
+
+#main_content_widget QDoubleSpinBox:focus, QSpinBox:focus{
+	border: 2px solid $focus_border_color;
+}
+
+#main_content_widget QSpinBox::up-button, QDoubleSpinBox::up-button {
+	width: 30px;
+}
+
+#main_content_widget QSpinBox::down-button, QDoubleSpinBox::down-button {
+	width: 30px;
+}
+
+#main_content_widget QLabel[role="data"] {
+	background-color: $primary;
+	padding-left: 10px;
+}
+
+#start_sub_btn {
+	padding-right: 40px;
+	padding-left: 40px;
+}
+
+#stop_sub_btn {
+	padding-right: 40px;
+	padding-left: 40px;
+}
+
+#main_content_widget QLineEdit {
+	background-color: $dark;
+	font-size: 20px;
+	padding: 10px;
+	qproperty-frame: false;
+}
+
+#main_content_widget QLineEdit:focus{
+	border: 2px solid $focus_border_color;
+	padding: 8px;
+}
+
+#main_content_widget QWidget[role="canvas"] {
+	background-color: $primary;
+}
+
+/* Controls */
+#controls_container  {
+	background-color: $secondary;
+}
+
+#controls_container QWidget[bg="dark"]{
+	background-color: $dark;
+}
+
+#controls_container QPushButton[control="pilot-cam"] {
+	border: 3px solid rgb(33, 70, 119);
+	text-align: center;
+	border-radius: 25px;
+}
+
+#controls_container QPushButton[control="pilot-cam"][status="off"]{
+	background-color: rgb(28, 46, 71);
+}
+
+#controls_container QPushButton[control="pilot-cam"][status="off"]:hover{
+	background-color: rgb(33, 55, 87);
+}
+
+#controls_container QPushButton[control="pilot-cam"][status="on"]{
+	background-color: rgb(44, 102, 211);
+}
+
+#controls_container QPushButton[control="pilot-cam"][status="on"]:hover{
+	background-color: rgb(45, 112, 235);
+}
+
+#controls_container QPushButton[control="pilot-cam"][status="shutdown"]{
+	background-color:  rgb(115, 109, 29);
+}
+
+#controls_container QPushButton[control="general"] {
+	border: 3px solid rgb(33, 70, 119);
+	text-align: center;
+	border-radius: 25px;
+}
+
+#controls_container QPushButton:enabled {
+	color:white;
+}
+
+#controls_container QPushButton[control="general"][status=false]{
+	background-color: rgb(28, 46, 71);
+}
+
+#controls_container QPushButton[control="general"][status=false]:hover{
+	background-color: rgb(33, 55, 87);
+}
+
+#controls_container QPushButton[control="general"][status=true]{
+	background-color: rgb(44, 102, 211);
+}
+
+#controls_containerQPushButton[control="general"][status=true]:hover{
+	background-color: rgb(45, 112, 235);
+}
+
+QPushButton[control="infoled"][status="off"]{
+	background-color: #811818;
+	border:3px solid rgb(229, 30, 54);
+}
+
+QPushButton[control="infoled"][status="on"]{
+	background-color: rgb(46, 101, 28);
+	border:3px solid rgb(112, 238, 72);
+}
+
+QPushButton[control="infoled"][status="warn"]{
+	border: 3px solid rgb(255, 178, 27);
+	background-color: rgb(149, 93, 26);
+}
+
+/* Status bar*/
+#status_bar {
+	background-color: $secondary;
+}
+
+QPushButton[status="off"]{
+	background-color: #811818;
+	border:3px solid rgb(229, 30, 54);
+}
+
+
+QPushButton[status="on"]{
+	background-color: rgb(46, 101, 28);
+	border:3px solid rgb(112, 238, 72);
+	color: white;	
+}
+
+QPushButton[status="starting"]{
+	border: 3px solid rgb(255, 178, 27);
+	background-color: rgb(149, 93, 26);
+	color: white;	
+}
+
+/* Variable state bar*/
+#state_variable_bar {
+	background-color: $secondary;
+}
+
+#battery_progress_bar {
+	background-color: $secondary;
+}
+
+#bottom_cam_timer_label[display=true] {
+	color: $text_color;
+}
+
+#bottom_cam_timer_label[display=false] {
+	color: transparent;
+}
+
+
+QScrollBar:vertical {
+	width: 15px;
+	margin: 21px 0 21px 0;
+}
+
+QScrollBar::handle:vertical {
+	background-color: $dark;
+	min-height: 25px;
+	border-radius: 5px;
+}
+
+QScrollBar::add-line:vertical {
+	height: 20px;
+	border: 1px solid transparent;
+	subcontrol-position: bottom;
+	subcontrol-origin: margin;
+}
+
+QScrollBar::sub-line:vertical {
+	border: 1px solid transparent;
+	height: 20px;
+	subcontrol-position: top;
+	subcontrol-origin: margin;
+}
+
+QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
+	background: none;
+	border-radius: 5px;
+}
+
+QScrollBar::up-arrow:vertical {
+	background-color: $dark;
+	image: url(:/icons/icons/chevron-up.svg);;
+}
+
+QScrollBar::down-arrow:vertical {
+	background-color: $dark;
+	image: url(:/icons/icons/chevron-down.svg);
+}
+
+#battery_progress_bar {
+  background-color: $primary;
+}
+
+#battery_progress_bar[charge="low"]:chunk{
+  background-color: #F44336;
+}
+
+#battery_progress_bar[charge="medium"]:chunk{
+  background-color: rgb(255, 179, 26);
+}
+
+#battery_progress_bar[charge="high"]:chunk{
+  background-color: rgb(49, 124, 26);
+}
